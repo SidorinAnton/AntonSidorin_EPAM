@@ -1,21 +1,4 @@
-
-
-
-
-
-
-
-
-
-print(
-
-
-    "exampe"
-
-
-
-
-)
+print("exampe")
 
 
 import pandas as pd
