@@ -13,7 +13,6 @@ from typing import Any, List, Sequence
 
 
 def custom_range(iterable: Sequence[Any], *args) -> List[Any]:
-    result = list()
 
     # Check number of arguments
     if len(args) > 3:
@@ -42,7 +41,5 @@ def custom_range(iterable: Sequence[Any], *args) -> List[Any]:
         start_index = iterable.index(args[0])
         step = args[2]
 
-    for index in range(start_index, stop_index, step):
-        result.append(iterable[index])
-
+    result = [i for i in iterable[start_index:stop_index:step]]
     return result

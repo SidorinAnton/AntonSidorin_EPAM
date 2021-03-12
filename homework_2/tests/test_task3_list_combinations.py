@@ -1,7 +1,8 @@
 from typing import Any, List, Tuple
 
 import pytest
-from src.task3_list_combinations import combinations
+
+from homework_2.src.task3_list_combinations import combinations
 
 
 @pytest.mark.parametrize(

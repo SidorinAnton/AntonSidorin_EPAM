@@ -12,6 +12,13 @@ from collections import Counter
 from typing import List
 
 
+def read_file_by_char(file_path):
+    with open(file_path, encoding="unicode-escape") as data_input:
+        for line in data_input:
+            for char in line:
+                yield char
+
+
 def get_longest_diverse_words(file_path: str) -> List[str]:
     with open(file_path, encoding="unicode-escape") as data_input:
 
@@ -19,24 +26,32 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
         quantitative_dict = dict()
 
         # Repeats_counter is required so that one word does not replace another
-        repeats_counter = 0
+        repeats_counter_in_dict_keys = 0
 
         for line in data_input:
             list_of_words = line.strip().split()
 
             for word in list_of_words:
-                word = word.strip("():»«-.,;")
+                word = word.strip(string.punctuation)
 
                 length_of_word = len(word)
                 num_of_unique_symbols = len(set(word))
 
-                key = (length_of_word, num_of_unique_symbols, repeats_counter)
+                key = (
+                    length_of_word,
+                    num_of_unique_symbols,
+                    repeats_counter_in_dict_keys,
+                )
 
                 if key not in quantitative_dict:
                     quantitative_dict[key] = word
                 else:
-                    repeats_counter += 1
-                    key = (length_of_word, num_of_unique_symbols, repeats_counter)
+                    repeats_counter_in_dict_keys += 1
+                    key = (
+                        length_of_word,
+                        num_of_unique_symbols,
+                        repeats_counter_in_dict_keys,
+                    )
                     quantitative_dict[key] = word
 
     # Firstly, get words with largest amount of unique symbols, then - longest words
@@ -58,60 +73,49 @@ def get_longest_diverse_words(file_path: str) -> List[str]:
 
 
 def get_rarest_char(file_path: str) -> str:
-    with open(file_path, encoding="unicode-escape") as data_input:
-        counter = Counter()
-        for line in data_input:
-            for char in line:
-                counter[char] += 1
+    counter = Counter()
+    for char in read_file_by_char(file_path):
+        counter[char] += 1
 
-        counter_of_chars = counter.most_common()
+    counter_of_chars = counter.most_common()
 
-        if len(counter_of_chars) > 0:
-            return counter_of_chars[-1][0]
-        else:
-            return "There is an empty file"
+    if len(counter_of_chars) > 0:
+        return counter_of_chars[-1][0]
+    else:
+        return "There is an empty file"
 
 
 def count_punctuation_chars(file_path: str) -> int:
-    with open(file_path, encoding="unicode-escape") as data_input:
-        counter = 0
-        for line in data_input:
-            for char in line:
-                if char in string.punctuation:
-                    counter += 1
+    counter = 0
+    for char in read_file_by_char(file_path):
+        if char in string.punctuation:
+            counter += 1
 
-        return counter
+    return counter
 
 
 def count_non_ascii_chars(file_path: str) -> int:
-    with open(file_path, encoding="unicode-escape") as data_input:
-        counter = 0
-        for line in data_input:
-            for char in line:
-                if (char in string.punctuation) or (char in ["\n", " ", "\t"]):
-                    continue
+    """Return number of non-ascii chars (including digits, punctuation and whitespace)"""
+    counter = 0
+    for char in read_file_by_char(file_path):
+        if char not in string.ascii_letters:
+            counter += 1
 
-                elif char not in string.ascii_letters:
-                    counter += 1
-
-        return counter
+    return counter
 
 
 def get_most_common_non_ascii_char(file_path: str) -> str:
-    with open(file_path, encoding="unicode-escape") as data_input:
-        counter = Counter()
+    """Return most common non-ascii char (including digits, punctuation and whitespace)"""
 
-        for line in data_input:
-            for char in line:
-                if (char in string.punctuation) or (char in ["\n", " ", "\t"]):
-                    continue
+    counter = Counter()
 
-                elif char not in string.ascii_letters:
-                    counter[char] += 1
+    for char in read_file_by_char(file_path):
+        if char not in string.ascii_letters:
+            counter[char] += 1
 
-        non_ascii = counter.most_common()
+    non_ascii = counter.most_common()
 
-        if len(non_ascii) > 0:
-            return non_ascii[0][0]
-        else:
-            return "No non-ascii char"
+    if len(non_ascii) > 0:
+        return non_ascii[0][0]
+    else:
+        return "No non-ascii char"

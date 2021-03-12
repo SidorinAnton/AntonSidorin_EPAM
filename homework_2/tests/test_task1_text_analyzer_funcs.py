@@ -2,7 +2,8 @@ from pathlib import Path
 from typing import List
 
 import pytest
-from src.task1_text_analyzer import *
+
+from homework_2.src.task1_text_analyzer import *
 
 # I now, that use star in import is very bad.
 # However, I'm sure, that I haven't got any functions with the same names here.
@@ -73,8 +74,8 @@ def test_check_count_punctuation_chars(file_name: str, expected_result: int):
 @pytest.mark.parametrize(
     ["file_name", "expected_result"],
     [
-        ("non_ascii.txt", 3),
-        ("punctuation.txt", 0),
+        ("non_ascii.txt", 5),
+        ("punctuation.txt", 8),
         ("empty_file.txt", 0),
     ],
 )
@@ -90,7 +91,7 @@ def test_check_count_non_ascii_chars(file_name: str, expected_result: int):
     ["file_name", "expected_result"],
     [
         ("most_common_non_ascii.txt", "\u00dd"),
-        ("punctuation.txt", "No non-ascii char"),
+        ("punctuation.txt", ","),
         ("empty_file.txt", "No non-ascii char"),
     ],
 )

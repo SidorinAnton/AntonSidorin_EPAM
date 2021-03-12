@@ -14,23 +14,18 @@ from typing import Callable
 
 
 def cache(func: Callable) -> Callable:
-    cache_value = (
-        dict()
-    )  # Structure of this dict will be: cache_value = {function: {tuple_values: result}}
+    cache_value = dict()
+    # Structure of this dict will be: cache_value = {tuple_values_of_function: result_of_function}
 
-    def wrap_cache(*args):  # Here we will cache our function with params
+    def wrap_cache(*args):  # Here we will cache params of our function
         params_of_func = args  # Tuple of params
 
-        if func not in cache_value:
-            # Remember some function
-            cache_value[func] = dict()
-
-        if params_of_func not in cache_value[func]:
+        if params_of_func not in cache_value:
             # Remember params and result of some function
-            cache_value[func][params_of_func] = func(*params_of_func)
+            cache_value[params_of_func] = func(*params_of_func)
 
         # Return values from dict (cache_value)
         # If the value is in this dict, we just get it without calculation (running function again)
-        return cache_value[func][params_of_func]
+        return cache_value[params_of_func]
 
     return wrap_cache

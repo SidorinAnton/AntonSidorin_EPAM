@@ -2,7 +2,8 @@ import string
 from typing import Any, List, Sequence
 
 import pytest
-from src.task5_range import custom_range
+
+from homework_2.src.task5_range import custom_range
 
 
 @pytest.mark.parametrize(
