@@ -1,3 +1,12 @@
+"""
+Here's a not very efficient calculation function that calculates something important.
+
+Calculate total sum of slow_calculate() of all numbers starting from 0 to 500.
+Calculation time should not take more than a minute.
+Use functional capabilities of multiprocessing module.
+You are not allowed to modify slow_calculate function.
+"""
+
 import hashlib
 import random
 import struct
@@ -13,13 +22,8 @@ def slow_calculate(value):
 
 
 def time_with_parallelization():
-    numbers = [i for i in range(500)]
 
-    start_time_sec = time.time()
+    with Pool(50) as p:
+        res = sum(p.map(slow_calculate, range(500)))
 
-    with Pool(100) as p:
-        result = p.map(slow_calculate, numbers)
-
-    end_time_sec = time.time()
-
-    return end_time_sec - start_time_sec
+    return res

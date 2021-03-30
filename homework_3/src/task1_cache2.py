@@ -33,24 +33,34 @@ def cache(times: int) -> Callable:
         raise TypeError(f"{type(times)} cannot be interpreted as an integer")
 
     def cache_decorator(func: Callable):
-        cache_value = dict()
+
+        if times == 0:
+            return func
+
+        cache_value = dict()  # {params_of_func: [result_of_func, counter_times]}
         counter_times = 0
 
         def wrap_cache(*args):
             params_of_func = args
+            # result_of_func = func(*args)
+
             nonlocal counter_times
             nonlocal cache_value
 
-            if counter_times == times:
-                cache_value = dict()
+            try:
+                if cache_value[params_of_func][1] == times:
+                    del cache_value[params_of_func]
+            except KeyError:
+                print("Cache with the given parameters is empty")
 
             if params_of_func not in cache_value:
+                print(f"Initializing the cache with {params_of_func}")
                 counter_times = 0
-                cache_value[params_of_func] = func(*params_of_func)
+                cache_value[params_of_func] = [func(*args), counter_times]
             else:
-                counter_times += 1
+                cache_value[params_of_func][1] += 1  # counter_times in cache value
 
-            return cache_value[params_of_func]
+            return cache_value[params_of_func][0]
 
         return wrap_cache
 
